@@ -3631,9 +3631,12 @@ function cbBuildMonthlyStats() {
   }
   return '<div class="cb-resp-title">2026년 3월 — 전체 알람 통계</div>'+
 '<div class="cb-stat-grid"><div class="cb-stat-card"><div class="cb-stat-num cyan">22</div><div class="cb-stat-lbl">총 알람 발생</div></div><div class="cb-stat-card"><div class="cb-stat-num red">4</div><div class="cb-stat-lbl">긴급</div></div><div class="cb-stat-card"><div class="cb-stat-num orange">11</div><div class="cb-stat-lbl">경고</div></div><div class="cb-stat-card"><div class="cb-stat-num yellow">7</div><div class="cb-stat-lbl">주의</div></div></div>'+
+'<div class="cb-resp-title" style="margin-top:14px">전월 대비 비교 (2월 → 3월)</div>'+
+'<div class="cb-stat-grid"><div class="cb-stat-card"><div class="cb-stat-num red" style="font-size:16px">2 → 4<br><span style="font-size:11px;color:var(--danger)">▲ +100%</span></div><div class="cb-stat-lbl">긴급</div></div><div class="cb-stat-card"><div class="cb-stat-num orange" style="font-size:16px">11 → 11<br><span style="font-size:11px;color:var(--txt3)">— 동일</span></div><div class="cb-stat-lbl">경고</div></div><div class="cb-stat-card"><div class="cb-stat-num yellow" style="font-size:16px">25 → 7<br><span style="font-size:11px;color:var(--ok)">▼ -72%</span></div><div class="cb-stat-lbl">주의</div></div><div class="cb-stat-card"><div class="cb-stat-num cyan" style="font-size:16px">38 → 22<br><span style="font-size:11px;color:var(--ok)">▼ -42%</span></div><div class="cb-stat-lbl">총합</div></div></div>'+
 '<div class="cb-resp-title" style="margin-top:14px">구역별 알람 분포</div>'+byZoneHtml+
-'<div class="cb-alert-box blue" style="margin-top:10px"><div class="cb-alert-icon">📈</div><div class="cb-alert-text"><strong>전월 대비 경고 알람 +27% 증가</strong><br>A구역 배관 노후화, D구역 냉수계통 압력 불안정이 주요 원인으로 분석됩니다. 정기 정밀 점검 일정을 앞당기는 것을 권장합니다.</div></div>'+
-'<div class="cb-bot-meta"><span>📅 기준일: 2026-03-09</span><span>🕐 '+cbNow()+'</span></div>';
+'<div class="cb-alert-box orange" style="margin-top:10px"><div class="cb-alert-icon">⚠️</div><div class="cb-alert-text"><strong>전월 대비 긴급 알람 +100% 증가</strong><br>• A구역: 배관 변위 긴급 2건 신규 발생 (전월 0건)<br>• D구역: 냉수계통 압력 초과 긴급 2건 지속<br>주요 원인: A구역 배관 노후화 가속, D구역 냉동기 출구 압력 제어 불안정</div></div>'+
+'<div class="cb-alert-box blue" style="margin-top:8px"><div class="cb-alert-icon">📊</div><div class="cb-alert-text"><strong>AI 분석 요약</strong><br>• 긴급 알람 증가세 — 즉각 조치 필요<br>• 주의 알람 감소 — 예방 점검 효과로 추정<br>• A구역 집중 모니터링 권고 (7일 연속 경고)</div></div>'+
+'<div class="cb-bot-meta"><span>📅 기준일: 2026-03-09</span><span>🕐 '+cbNow()+'</span><span>📈 전월 데이터: 2026-02</span></div>';
 }
 
 function cbBuildPressureStatus() {
@@ -3687,6 +3690,10 @@ function cbGenerateResponse(input) {
   // D구역 냉수 긴급
   if ((has(t,'D구역') || has(t,'냉수')) && (has(t,'긴급') || has(t,'원인'))) {
     return cbBuildDZoneAlert();
+  }
+  // 통계 + 위험 순위 (둘 다 요청 시)
+  if ((has(t,'통계') || has(t,'이번 달') || has(t,'이번달')) && (has(t,'위험') || has(t,'순위'))) {
+    return cbBuildMonthlyStats() + '<div style="margin-top:20px;padding-top:16px;border-top:2px dashed var(--border)"></div>' + cbBuildDangerSummary();
   }
   // 통계
   if (has(t,'통계') || has(t,'이번 달') || has(t,'이번달') || matchAll(t,['전체','알람'])) {
